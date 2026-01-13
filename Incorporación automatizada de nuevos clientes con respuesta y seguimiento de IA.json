@@ -1,0 +1,409 @@
+{
+  "name": "Incorporación automatizada de nuevos clientes con respuesta y seguimiento de IA",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Formulario de Nuevo Cliente",
+        "formDescription": "Gracias por tu interés. Nos pondremos en contacto contigo pronto.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Nombre completo",
+              "fieldName": "nombre_completo",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Correo electrónico",
+              "fieldType": "email",
+              "fieldName": "correo_electronico",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Empresa",
+              "fieldName": "empresa"
+            },
+            {
+              "fieldLabel": "Teléfono",
+              "fieldName": "telefono"
+            },
+            {
+              "fieldLabel": "¿Cómo podemos ayudarte?",
+              "fieldType": "dropdown",
+              "fieldName": "como_podemos_ayudarte",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Consulta general"
+                  },
+                  {
+                    "option": "Solicitud de presupuesto"
+                  },
+                  {
+                    "option": "Soporte técnico"
+                  },
+                  {
+                    "option": "Otro"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "Mensaje o comentarios adicionales",
+              "fieldType": "textarea",
+              "fieldName": "mensaje_comentarios"
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "cc16093f-5176-4e9d-9e60-ab383b9ee8b5",
+      "name": "New Client Form",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        -512,
+        160
+      ],
+      "webhookId": "915c9825-be88-4bd2-9090-d2c3906e8b3e"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "id-1",
+              "name": "Nombre",
+              "value": "={{ $json['Nombre completo'] }}",
+              "type": "string"
+            },
+            {
+              "id": "id-2",
+              "name": "Email",
+              "value": "={{ $json['Correo electrónico'] }}",
+              "type": "string"
+            },
+            {
+              "id": "id-3",
+              "name": "Compañia",
+              "value": "={{ $json['Empresa'] || 'No especificada' }}",
+              "type": "string"
+            },
+            {
+              "id": "id-4",
+              "name": "Telefono",
+              "value": "={{ $json['Teléfono'] || 'No proporcionado' }}",
+              "type": "string"
+            },
+            {
+              "id": "id-5",
+              "name": "Servicio",
+              "value": "={{ $json['¿Cómo podemos ayudarte?'] }}",
+              "type": "string"
+            },
+            {
+              "id": "id-6",
+              "name": "Mensaje",
+              "value": "={{ $json['Mensaje o comentarios adicionales'] || 'Sin mensaje' }}",
+              "type": "string"
+            },
+            {
+              "id": "id-7",
+              "name": "Fecha",
+              "value": "={{ $now.format('yyyy-MM-dd HH:mm:ss') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "59d6bcc0-bfdd-4efb-81b0-850733efad93",
+      "name": "Workflow Configuration",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -288,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1Nj56eIBHmafo4361UsYlV9NDZn9-5V65qZb0OYznT3k",
+          "mode": "list",
+          "cachedResultName": "Cliente",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Nj56eIBHmafo4361UsYlV9NDZn9-5V65qZb0OYznT3k/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Nj56eIBHmafo4361UsYlV9NDZn9-5V65qZb0OYznT3k/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Servicio": "={{ $('New Client Form').item.json.como_podemos_ayudarte }}",
+            "Nombre": "={{ $('New Client Form').item.json.nombre_completo }}",
+            "Email": "={{ $('New Client Form').item.json.correo_electronico }}",
+            "Compañia": "={{ $('New Client Form').item.json.empresa }}",
+            "Telefono": "={{ $('New Client Form').item.json.telefono }}",
+            "Mensaje": "={{ $('New Client Form').item.json.mensaje_comentarios }}",
+            "Fecha": "={{ $('New Client Form').item.json.submittedAt }}"
+          },
+          "matchingColumns": [
+            "Nombre"
+          ],
+          "schema": [
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Compañia",
+              "displayName": "Compañia",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Telefono",
+              "displayName": "Telefono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Servicio",
+              "displayName": "Servicio",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Mensaje",
+              "displayName": "Mensaje",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "69aae528-992e-4f52-a277-b61f7d6808ce",
+      "name": "Store Client Data",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        0,
+        0
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "It5xJpwXCk7gyLvN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "id",
+          "value": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "af77b176-a36e-4e94-8955-1c70dad1901c",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -64,
+        528
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "jc6TCGq5dDEm72o6",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"subject\": \"Asunto del correo\",\n\t\"emailBody\": \"Cuerpo del mensaje personalizado\"\n}"
+      },
+      "id": "a8ab3218-1fc8-4f53-ab87-651d8b03c527",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        80,
+        528
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Genera una respuesta personalizada en español para un nuevo cliente basándote en la siguiente información:\n\nNombre: {{ $('New Client Form').item.json.nombre_completo }}\nEmpresa: {{ $('New Client Form').item.json.empresa }}\nTipo de servicio: {{ $('New Client Form').item.json.como_podemos_ayudarte }}\nMensaje: {{ $('New Client Form').item.json.mensaje_comentarios }}\n\nCrea un correo profesional y cálido que:\n1. Agradezca al cliente por contactarnos\n2. Confirme que hemos recibido su solicitud\n3. Mencione específicamente el tipo de servicio que solicitó\n4. Indique que nos pondremos en contacto en las próximas 24-48 horas\n5. Sea personalizado según su mensaje\n6. Pon en: Su nombre: Ariel Marquez, Su puesto: System IT, Nombre de la empresa: Tech Solution. Separa cada campo con coma\n\nDevuelve el resultado en formato JSON con dos campos:\n- subject: Un asunto atractivo para el correo\n- emailBody: El cuerpo completo del mensaje",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "Eres un asistente profesional de atención al cliente que genera respuestas personalizadas y cálidas en español. Tu objetivo es hacer que cada cliente se sienta valorado y atendido."
+        }
+      },
+      "id": "e1b39153-20c7-4904-9001-c9399876fd5b",
+      "name": "Generate Personalized Response",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -64,
+        304
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('New Client Form').item.json.correo_electronico }}",
+        "subject": "={{ $json.output.subject }}",
+        "message": "={{ $json.output.emailBody }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "25c75d28-3447-40f0-99c5-6494d7b3d68b",
+      "name": "Send Email to Client",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        288,
+        304
+      ],
+      "webhookId": "be3658b7-0468-4cd9-a925-826e21dd505b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "YC22RhAvhuylaISU",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "New Client Form": {
+      "main": [
+        [
+          {
+            "node": "Workflow Configuration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Configuration": {
+      "main": [
+        [
+          {
+            "node": "Store Client Data",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate Personalized Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Personalized Response",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Generate Personalized Response",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Personalized Response": {
+      "main": [
+        [
+          {
+            "node": "Send Email to Client",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false,
+    "timeSavedMode": "fixed",
+    "timezone": "America/Argentina/Buenos_Aires",
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionTimeout": -1
+  },
+  "versionId": "4e25870d-b7ca-4220-851a-2caff6dc18a7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b12125fbb1c778e8b73311febdc1c894995049f8fbd0eca28ef0fb127ff41ba8"
+  },
+  "id": "YdQg-npznvmX-5vlOxFBT",
+  "tags": []
+}
